@@ -1,15 +1,34 @@
 #compdef qrstash
 
 _qrstash() {
-  local commands="add show read update rename delete list"
+  local -a commands
+  commands=(
+    'add:Create a new QR code'
+    'show:Display QR code in terminal'
+    'read:Show raw data of a QR code'
+    'update:Update existing QR code data'
+    'rename:Rename a QR code'
+    'delete:Delete a QR code'
+    'export:Export QR code as PNG image'
+    'list:List all saved QR codes'
+  )
 
-  if [ "$CURRENT" -eq 2 ]; then
-    _values 'command' add show read update rename delete list
-  elif [ "$CURRENT" -eq 3 ]; then
+  if (( CURRENT == 2 )); then
+    _describe 'command' commands
+  elif (( CURRENT == 3 )); then
     case "${words[2]}" in
-      show|read|update|rename|delete)
-        local qr_codes=($(ls ~/.qrstash 2>/dev/null))
-        _values 'qr code' $qr_codes
+      show|read|update|rename|delete|export)
+        local -a qr_codes
+        qr_codes=(${(f)"$(ls ~/.qrstash 2>/dev/null)"})
+        if (( ${#qr_codes} > 0 )); then
+          _describe 'qr code' qr_codes
+        fi
+        ;;
+    esac
+  elif (( CURRENT == 4 )); then
+    case "${words[2]}" in
+      export)
+        _files -g '*.png'
         ;;
     esac
   fi
