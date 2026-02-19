@@ -1,0 +1,98 @@
+#!/bin/zsh
+
+dir="$HOME/.qrstash"
+mkdir -p "$dir"
+
+case "$1" in
+  add)
+    if [ -z "$2" ] || [ -z "$3" ]; then
+      echo "Usage: qrstash add <name> <data>"
+      exit 1
+    fi
+    echo "$3" > "$dir/$2"
+    chmod 600 "$dir/$2"
+    echo "Added '$2'"
+    ;;
+  show)
+    if [ -z "$2" ]; then
+      echo "Usage: qrstash show <name>"
+      exit 1
+    fi
+    if [ -f "$dir/$2" ]; then
+      qrencode -t UTF8 "$(cat "$dir/$2")"
+    else
+      echo "QR code '$2' not found"
+    fi
+    ;;
+  read)
+    if [ -z "$2" ]; then
+      echo "Usage: qrstash read <name>"
+      exit 1
+    fi
+    if [ -f "$dir/$2" ]; then
+      cat "$dir/$2"
+    else
+      echo "QR code '$2' not found"
+    fi
+    ;;
+  update)
+    if [ -z "$2" ] || [ -z "$3" ]; then
+      echo "Usage: qrstash update <name> <new-data>"
+      exit 1
+    fi
+    if [ -f "$dir/$2" ]; then
+      echo "$3" > "$dir/$2"
+      echo "Updated '$2'"
+    else
+      echo "QR code '$2' not found"
+    fi
+    ;;
+  rename)
+    if [ -z "$2" ] || [ -z "$3" ]; then
+      echo "Usage: qrstash rename <old-name> <new-name>"
+      exit 1
+    fi
+    if [ -f "$dir/$2" ]; then
+      mv "$dir/$2" "$dir/$3"
+      echo "Renamed '$2' to '$3'"
+    else
+      echo "QR code '$2' not found"
+    fi
+    ;;
+  delete)
+    if [ -z "$2" ]; then
+      echo "Usage: qrstash delete <name>"
+      exit 1
+    fi
+    if [ -f "$dir/$2" ]; then
+      rm "$dir/$2"
+      echo "Deleted '$2'"
+    else
+      echo "QR code '$2' not found"
+    fi
+    ;;
+  list)
+    ls "$dir" 2>/dev/null || echo "No QR codes yet"
+    ;;
+  --version|-v)
+    echo "qrstash 1.0.0"
+    ;;
+  --help|-h|*)
+    echo "qrstash - Stash and display QR codes from your terminal"
+    echo ""
+    echo "Usage: qrstash <command> [args]"
+    echo ""
+    echo "Commands:"
+    echo "  add <name> <data>      Create a new QR code"
+    echo "  show <name>            Display QR code in terminal"
+    echo "  read <name>            Show raw data of a QR code"
+    echo "  update <name> <data>   Update existing QR code"
+    echo "  rename <old> <new>     Rename a QR code"
+    echo "  delete <name>          Delete a QR code"
+    echo "  list                   List all saved QR codes"
+    echo ""
+    echo "Options:"
+    echo "  --version, -v          Show version"
+    echo "  --help, -h             Show this help"
+    ;;
+esac
