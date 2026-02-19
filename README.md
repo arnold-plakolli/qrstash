@@ -17,13 +17,13 @@ Save QR code data locally and display them instantly in your terminal whenever y
 ### Homebrew
 
 ```bash
-brew install arnoldplakolli/tap/qrstash
+brew install arnold-plakolli/tap/qrstash
 ```
 
 ### Manual
 
 ```bash
-git clone https://github.com/arnoldplakolli/qrstash.git
+git clone https://github.com/arnold-plakolli/qrstash.git
 cd qrstash
 ./install.sh
 ```
