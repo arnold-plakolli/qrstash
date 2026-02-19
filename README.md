@@ -114,3 +114,6 @@ rm -rf ~/.qrstash
 ## License
 
 [MIT](LICENSE)
+
+**Dependencies:**
+[qrencode](https://github.com/fukuchi/libqrencode) is licensed under [LGPL v2.1](https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html).
